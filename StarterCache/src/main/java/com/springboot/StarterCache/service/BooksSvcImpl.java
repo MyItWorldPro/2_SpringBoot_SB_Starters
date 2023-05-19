@@ -4,6 +4,7 @@ import com.springboot.StarterCache.dto.Book;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,6 +41,12 @@ public class BooksSvcImpl implements BooksSvc{
         System.out.println("searchedBook="+searchedBook);
 
         return searchedBook;
+    }
+
+    @CacheEvict(value = "my-book-cache", allEntries = true)
+    @Scheduled(fixedRateString = "${caching.spring.booksListTTL}")
+    public void emptyBooksCache() {
+        System.out.println("deleting all books from cache !!!");
     }
 
 }
