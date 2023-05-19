@@ -1,6 +1,8 @@
 package com.springboot.StarterCache.service;
 
 import com.springboot.StarterCache.dto.Book;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,8 @@ import java.util.List;
 public class BooksSvcImpl implements BooksSvc{
 
     @Override
-    @Cacheable(value = "my-book-cache", key = "#bookId")
+    @CachePut(value = "my-book-cache", key = "#bookId", condition = "#bookId==2")
+    @Cacheable(value = "my-book-cache", key = "#bookId", unless = "#result==null")
     public Book getBookById(Integer bookId) throws InterruptedException {
         //Mock the DB calls slow time
         Thread.sleep(5000);
@@ -33,6 +36,8 @@ public class BooksSvcImpl implements BooksSvc{
         Book searchedBook = booksList.stream()
                 .filter(book -> book.getBookId().equals(bookId))
                 .findFirst().orElse(null);
+
+        System.out.println("searchedBook="+searchedBook);
 
         return searchedBook;
     }

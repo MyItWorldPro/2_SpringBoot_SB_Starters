@@ -12,6 +12,10 @@ public class Book {
         this.bookAuthor = bookAuthor;
     }
 
+    public Book() {
+
+    }
+
     public Integer getBookId() {
         return bookId;
     }
